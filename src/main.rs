@@ -1,17 +1,14 @@
 extern crate m3u;
 extern crate simplet2s;
-extern crate failure;
 extern crate structopt;
 extern crate walkdir;
 extern crate id3;
 extern crate metaflac;
-#[macro_use] extern crate failure_derive;
 #[macro_use] extern crate structopt_derive;
 
 use structopt::StructOpt;
 use walkdir::WalkDir;
 use std::path::{Path, PathBuf};
-use failure::Error;
 use std::fs::File;
 
 mod audio_types;
@@ -74,7 +71,7 @@ fn main() {
             let mut new_playlist = Vec::new();
             let base_dir = Path::new("..");
             for audio in playlist_iter {
-                let reformed_path = audio.strip_prefix(&args.strip_dir).unwrap_or(&audio);
+                let reformed_path = audio.strip_prefix(&args.strip_dir).map(|p| base_dir.join(p)).unwrap_or(audio);
                 new_playlist.push(simplify_path(reformed_path.to_path_buf()));
             }
             let mut f = File::create(entry.path()).unwrap();

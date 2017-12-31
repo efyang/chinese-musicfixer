@@ -1,5 +1,4 @@
 use std::path::PathBuf;
-use std::fs::File;
 use std::process::Command;
 use simplet2s;
 
