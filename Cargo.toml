@@ -1,0 +1,16 @@
+[package]
+authors = ["efyang <edward.yang6771@gmail.com>"]
+name = "chinese-musicfixer"
+version = "0.1.0"
+
+[dependencies]
+failure = "0.1.1"
+failure_derive = "0.1.1"
+id3 = "0.2.3"
+log = "0.4.1"
+m3u = "1.0.0"
+metaflac = "0.1.8"
+simplet2s = "0.1.2"
+structopt = "0.1.6"
+structopt-derive = "0.1.6"
+walkdir = "2.0.1"
