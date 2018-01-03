@@ -2,7 +2,6 @@ extern crate m3u;
 extern crate simplet2s;
 extern crate structopt;
 extern crate walkdir;
-extern crate id3;
 extern crate metaflac;
 #[macro_use] extern crate structopt_derive;
 
@@ -25,7 +24,6 @@ struct Cli {
 fn main() {
     let args = Cli::from_args();
     let source_dir = Path::new(&args.source_dir);
-    let mut audio_file_paths = Vec::new();
     if source_dir.exists() {
         // first fix all of the filenames
         for entry in WalkDir::new(source_dir).into_iter().filter_map(|e| e.ok()) {
@@ -33,20 +31,18 @@ fn main() {
             let simplified_file_name = simplet2s::convert(file_name);
             if file_name != simplified_file_name {
                 println!("Conflict: Renaming. \"{}\" -> \"{}\"", file_name, simplified_file_name);
+                // TODO: if directory already exists merge everything
                 ::std::fs::rename(entry.path(), entry.path().parent().unwrap().join(simplified_file_name)).unwrap();
             }
+        }
 
-            // add any audio files to our queue
+        for entry in WalkDir::new(source_dir).into_iter().filter_map(|e| e.ok()) {
             if entry.file_type().is_file() {
-                into_audio_file(entry.path().to_path_buf()).map(|af| audio_file_paths.push(af));
+                into_audio_file(entry.path().to_path_buf()).map(|af| af.simplify_metadata());
             }
         }
     } else {
         eprintln!("Error: dir \"{}\" does not exist", args.source_dir);
-    }
-
-    for file in audio_file_paths {
-        file.simplify_metadata();
     }
 
     let playlist_dir = Path::new(&args.playlist_dir);

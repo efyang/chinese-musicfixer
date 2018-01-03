@@ -1,25 +1,17 @@
 import argparse
-import mutagen.mp4
+import mutagen.easyid3
 parser = argparse.ArgumentParser(description='Get/Set m4a metadata')
 parser.add_argument("filepath")
 parser.add_argument("tag")
 parser.add_argument('--set-value', action = "store", dest = "tag_value")
 
 args = parser.parse_args()
-f = mutagen.mp4.MP4(args.filepath)
-
-def getkey(x):
-    return {
-        'title': '\xa9nam',
-        'album': '\xa9alb',
-        'artist': '\xa9ART',
-        'albumartist': 'aART'
-    }[x]
+f = mutagen.easyid3.EasyID3(args.filepath)
 
 try:
-    print(f[getkey(args.tag)][0])
+    print(f[args.tag][0])
     if args.tag_value:
-        f[getkey(args.tag)] = args.tag_value
+        f[args.tag] = args.tag_value
         f.save()
 except:
     print("")
