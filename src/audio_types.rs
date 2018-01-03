@@ -48,6 +48,7 @@ impl AudioFile {
                     tag.artist().map(|s| s.to_string()).map(|s| tag.set_artist(simplet2s::convert(&s)));
                     tag.album().map(|s| s.to_string()).map(|s| tag.set_album(simplet2s::convert(&s)));
                     tag.album_artist().map(|s| s.to_string()).map(|s| tag.set_album_artist(simplet2s::convert(&s)));
+                    tag.write_to_path(p, ::id3::Version::Id3v24);
                 }
             }
             AudioFile::M4A(ref p) => {
